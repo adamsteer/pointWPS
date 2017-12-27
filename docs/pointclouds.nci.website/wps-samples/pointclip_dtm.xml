@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wps:Execute service="WPS" version="1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsExecute_request.xsd">
+
+<ows:Identifier>pointclipdtm</ows:Identifier>
+  <wps:DataInputs>
+    
+    <wps:Input>
+      <ows:Identifier>polygon</ows:Identifier>
+      <wps:Data>
+          <wps:LiteralData  dataType="xs:string">POLYGON((151.2330722808838 -33.88962716371631,151.22303009033203 -33.902237338281566,151.23581886291504 -33.90836364261066,151.24611854553223 -33.90294972187015,151.2425994873047 -33.88969841287795,151.2330722808838 -33.88962716371631))</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+    <wps:Input>
+      <ows:Identifier>srid</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:string">4326</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+
+    <wps:Input>
+      <ows:Identifier>data_srid</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:string">28356</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+
+    <wps:Input>
+      <ows:Identifier>dataset</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:string">SydneyNorth</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+    <wps:Input>
+      <ows:Identifier>resolution</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:integer">2</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+    <wps:Input>
+      <ows:Identifier>radius</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:float">2.25</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+    <wps:Input>
+      <ows:Identifier>out_layers</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:float">mean,idw,count</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+
+  </wps:DataInputs>
+  <wps:ResponseForm>
+  
+  <wps:ResponseDocument storeExecuteResponse="true">
+<wps:Output asReference="true">
+<ows:Identifier>DTM</ows:Identifier>
+<ows:Title>DTM inside polygon</ows:Title>
+<ows:Abstract>
+DTM inside submitted polygon
+</ows:Abstract>
+</wps:Output>
+    </wps:ResponseDocument>
+    
+  </wps:ResponseForm>
+</wps:Execute>

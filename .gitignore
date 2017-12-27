@@ -1,0 +1,15 @@
+
+#python environments
+pywps-venv/
+python-eggs/
+
+#logs and working files
+outputs/
+workdir/
+logs/
+
+#MacOS shenanigans
+.DS_store
+
+#compiled code
+*.pyc

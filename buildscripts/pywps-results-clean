@@ -1,0 +1,5 @@
+#!/bin/bash
+#remove pywps outputs more than 5 hours old
+#copy to /etc/cron.hourly
+
+find /local/pywps-outputs/ -type f -mmin +360 -delete

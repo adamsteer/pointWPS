@@ -1,0 +1,42 @@
+
+/* Header Image Background - Change the URL below to your image path (example: ../images/background.jpg) */
+
+.page-header {
+    background: url('http://pointclouds.nci.org.au/images/bg_nci.png') center center;
+    height: 100px;
+    width; 100%;
+    background-size: cover;
+    padding: 20px;
+}
+
+
+p,li {
+  margin: 0 0 (@line-height-computed / 2);
+  color: #444444;
+}
+
+h3,h2,h1 {
+  color: #333333;
+}
+
+h1.pagetitle{
+  margin-left: 20px;
+  color: #eeeeee;
+  }
+
+
+a {
+  transition: color .4s;
+  color: #6666ff;
+}
+
+a:link,
+a:visited { color: #6666ff; }
+a:hover   { color: #FFA500; }
+a:active  {
+  transition: color .3s;
+  color: ##EB9100;
+}
+
+ td {font-size: 0.8em}
+ table { background-color: #dddddd }

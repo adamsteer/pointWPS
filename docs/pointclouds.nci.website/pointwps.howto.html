@@ -1,0 +1,398 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Using pointwps</title>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+<link href="css/custom.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div class="page-header">
+<img src="images/nci_logo_small.png" width="120px" align="left" padding="10px">
+<div class="container" style="margin-left: 10%;">
+<h1 class="pagetitle">Using pointWPS</h1>
+</div>
+</div>
+
+<div class="container"style="margin-top: 2%;">
+<p>
+The pointWPS endpoint is: http://your.pointcloud.domain/wps. Like all OGC services it has a getcapabilites response:</p>
+<p>
+<a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=getcapabilities">http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=getcapabilities</a></p>
+<p>
+...and using process identifiers you can see the inputs, outputs and methods for a given service using 'describeprocess', for example:</p>
+<p>
+<a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=polygonquery">http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=polygonquery</a></p>
+<p>
+Process execution can also be handled in a URL string, but given the complex data inputs and outputs using the HTTP POST method to deliver an XML payload for the server to operated on is the best approach. Sample XML payloads are provided for each service. Assuming we use curl from a terminal, the general form of a query is:</p>
+<p>
+curl -H "Content-Type: text/xml" -d@polygon_query_metadata.xml -X POST http://your.pointcloud.domain/wps</p>
+
+<h1>Processes</h1>
+
+<h4>polygonquery</h4>
+<p>
+Returns metadata about point clouds in JSON format. A range of queries about data derived from PDAL's 'info' directive are available. [ <a href="./wps-samples/polygon_query_metadata.xml">Sample XML</a> :: <a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=polygonquery">process description</a> ]</p>
+
+
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Input parameter</th>
+            <th>Description</th>
+            <th>Data type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>polygon</td>
+            <td>Polygon in WKT format</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>polygon's</i> CRS, eg '4326' for EPSG:4326 / WSG84 lat lons</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>data_srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>data's</i> CRS, eg '28355' for EPSG:28355 / MGA zone 55 metres</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>metadata</td>
+            <td>Multiple options:
+            <ul>
+                <li>'none' (default) for a list of file names which intersect the submitted polygon</li>
+                <li>'all' for all available metadata</li>
+            </ul>
+            <b>OR</b><br />
+            A space-delimited list of some or all of the following:
+            <ul>
+                <li>'density': returns point density for each dataset found</li>
+                <li>'count': returns total number of points in each dataset found</li>
+                <li>'classes': returns a list of all available ASPRS classes with a point count for each file found</li>
+                <li>'schema': returns the data storage schema for each file</li>
+            </ul>
+            </td>
+            <td>text string</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Response type</th>
+            <th>Expected response</th>
+          </tr>
+        </thead>
+        <tbody>
+            <td>Synchronous - a return is made within apache's timeout limit.</td>
+            <td>In the returned XML doxument, the <i>metdadata_response</i> field contains a JSON-formatted set of metadata. it will be empty if no data were found.<br />
+            A successful response will always contain the 'files' array. If 'all' was selected, another array containing a JSON dump of al metadata for all files is also present. For user-selected metadatat, the second array (after 'files') contains a list of files as elements, each with their own array of metadata.</td>
+          </tr>
+        </tbody>
+      </table>
+
+<h4>pointclip</h4>
+<p>
+Returns point data in LAZ (compressed ASPRS LAS) format within a user-submitted polygon. [ <a href="./wps-samples/pointclip.xml">Sample XML</a><br />
+:: <a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=pointclip">process description</a> ]</p>
+
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Input parameter</th>
+            <th>Description</th>
+            <th>Data type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>polygon</td>
+            <td>Polygon in WKT format</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>polygon's</i> CRS, eg '4326' for EPSG:4326 / WSG84 lat lons</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>data_srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>data's</i> CRS, eg '28355' for EPSG:28355 / MGA zone 55 metres</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>pointfilter</td>
+            <td>A PDAL filters.range string. See <a href="https://www.pdal.io/stages/filters.range.html">https://www.pdal.io/stages/filters.range.html</a>. If you're not sure whether any classes exist in your polygon execute a polygonquery first with 'classes' set in the metadata field. Leave empty to return all points. To select 'ground' for example, enter 'Classification[2:2]'.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>dataset</td>
+            <td>[optional] the name of a specific survey (if known). Not yet implemented.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>output_format</td>
+            <td>[optional] return data in a specific format from the options 'laz' (now), 'ply' (not yet), 'pgsql' (not yet) and 'ascii' (not yet).
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>outfilename</td>
+            <td>[optional] an output file name
+            </td>
+            <td>text string</td>
+          </tr>
+
+        </tbody>
+      </table>
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Response type</th>
+            <th>Expected response</th>
+          </tr>
+        </thead>
+        <tbody>
+            <td>Asynchronous. The server will respond with a status URL, you need to check it periodically.</td>
+            <td>An XML document providing process information and a link to a downloadable file in your chosen file format. You need to manually download the result.</td>
+          </tr>
+        </tbody>
+      </table>
+
+
+<h4>pointclipnormalised</h4>
+<p>
+Returns point data in LAZ (compressed ASPRS LAS) format within a user-submitted polygon, as 'height above ground' - or normalised heights. Requires ASPRS-classified data to work, or some form of tagging for 'ground' points. [ <a href="./wps-samples/point_clip_hag.xml">Sample XML</a><br />
+:: <a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=pointclipnormalised">process description</a> ]</p>
+
+
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Input parameter</th>
+            <th>Description</th>
+            <th>Data type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>polygon</td>
+            <td>Polygon in WKT format</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>polygon's</i> CRS, eg '4326' for EPSG:4326 / WSG84 lat lons</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>data_srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>data's</i> CRS, eg '28355' for EPSG:28355 / MGA zone 55 metres</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>dataset</td>
+            <td>[optional] the name of a specific survey (if known). Not yet implemented.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>pointfilter</td>
+            <td>A PDAL filters.range string. See <a href="https://www.pdal.io/stages/filters.range.html">https://www.pdal.io/stages/filters.range.html</a>. If you're not sure whether any classes exist in your polygon execute a polygonquery first with 'classes' set in the metadata field. Leave empty to return all points as height above ground. To select 'buildings' for example, enter 'Classification[6:6]'.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>output_format</td>
+            <td>[optional] return data in a specific format from the options 'laz' (now), 'ply' (not yet), 'pgsql' (not yet) and 'ascii' (not yet).
+            </td>
+            <td>text string</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Response type</th>
+            <th>Expected response</th>
+          </tr>
+        </thead>
+        <tbody>
+            <td>Asynchronous. The server will respond with a status URL, you need to check it periodically.</td>
+            <td>An XML document providing process information and a link to a downloadable file in your chosen file format. You need to manually download the result.</td>
+          </tr>
+        </tbody>
+      </table>
+
+<h4>pointclipdtm</h4>
+<p>
+Returns a rasterised datase as GeoTIFF from points within a user-submitted polygon. Requires ASPRS-classified data to work, or some form of tagging for 'ground' points. [ <a href="./wps-samples/pointclip_dtm.xml">Sample XML</a><br />
+:: <a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=pointclipdtm">process description</a> ]</p>
+
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Input parameter</th>
+            <th>Description</th>
+            <th>Data type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>polygon</td>
+            <td>Polygon in WKT format</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>polygon's</i> CRS, eg '4326' for EPSG:4326 / WSG84 lat lons</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>data_srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>data's</i> CRS, eg '28355' for EPSG:28355 / MGA zone 55 metres</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>dataset</td>
+            <td>the name of a specific survey (if known). Not yet implemented, defaults to 'all'.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>resolution</td>
+            <td>DTM cell size in floating point metres (eg 2.0, 5.0). Please check that your choice is valid using the polygonquery process with 'density' set as a metadata flag. For example selecting a 1.0 m cell size for data with fewer than 1 point per square meter will give untrustworthy results. Try to fit at least 8 points in a DTM cell.
+            </td>
+            <td>float</td>
+          </tr>
+          <tr>
+            <td>radius</td>
+            <td>[optional] Search radius for points to assign to each cell, in floating point metres (eg 2.5, 7.5). Default is (resolution + sqrt(2)). Choose carefully here also - large radii have a smoothing effect on the resulting DTM. It is useful to consider cell neighbours in generating DTM heights, just be careful about how big a region to consider.
+            </td>
+            <td>float</td>
+          </tr>
+          <tr>
+            <td>gdal_driver</td>
+            <td>[optional] GDAL driver for output file format. Default is GTiff, no other options enabled at this point.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>out_layers</td>
+            <td>
+            A comma separated list of one or more possible cell values: mean, min, max, idw, stdev, count, all. Default is "mean" - which will be used if this input is omitted. To control your outpur results, create a comma separated list of one or more output types. The results will be stacked into bands, in order of appearance in the list. For example using "all" will create a 6-band raster with all outputs. Using "mean" will create a single band raster populated with mean cell heights. Using "count" will create a proxy for point density, a single band raster populated with cell counts. See the PDAL writers.gdal documentation for more: <a href="https://www.pdal.io/stages/writers.gdal.html">https://www.pdal.io/stages/writers.gdal.html</a>
+            </td>
+            <td>text string</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Response type</th>
+            <th>Expected response</th>
+          </tr>
+        </thead>
+        <tbody>
+            <td>Asynchronous. The server will respond with a status URL, you need to check it periodically.</td>
+            <td>An XML document providing process information and a link to a downloadable file in your chosen file format. You need to manually download the result.</td>
+          </tr>
+        </tbody>
+      </table>
+
+<h4>tile2dtm</h4>
+<p>
+Returns a rasterised datase as GeoTIFF from points within a user-submitted polygon. Requires ASPRS-classified data to work, or some form of tagging for 'ground' points. [ <a href="./wps-samples/tile2dtm.xml">Sample XML</a><br />
+:: <a href="http://your.pointcloud.domain/wps?service=wps&version=1.0.0&request=describeprocess&identifier=pointclipdtm">process description</a> ]</p>
+
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Input parameter</th>
+            <th>Description</th>
+            <th>Data type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>dataset</td>
+            <td>Path to a LAS/LAZ format tile</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>srid</td>
+            <td>Numerical part of the EPSG code which describes the <i>polygon's</i> CRS, eg '4326' for EPSG:4326 / WSG84 lat lons</td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>resolution</td>
+            <td>DTM cell size in floating point metres (eg 2.0, 5.0). Please check that your choice is valid using the polygonquery process with 'density' set as a metadata flag. For example selecting a 1.0 m cell size for data with fewer than 1 point per square meter will give untrustworthy results. Try to fit at least 8 points in a DTM cell.
+            </td>
+            <td>float</td>
+          </tr>
+          <tr>
+            <td>radius</td>
+            <td>[optional] Search radius for points to assign to each cell, in floating point metres (eg 2.5, 7.5). Default is (resolution + sqrt(2)). Choose carefully here also - large radii have a smoothing effect on the resulting DTM. It is useful to consider cell neighbours in generating DTM heights, just be careful about how big a region to consider.
+            </td>
+            <td>float</td>
+          </tr>
+          <tr>
+            <td>gdal_driver</td>
+            <td>[optional] GDAL driver for output file format. Default is GTiff, no other options enabled at this point.
+            </td>
+            <td>text string</td>
+          </tr>
+          <tr>
+            <td>out_layers</td>
+            <td>
+            A comma separated list of one or more possible cell values: mean, min, max, idw, stdev, count, all. Default is "mean" - which will be used if this input is omitted. To control your outpur results, create a comma separated list of one or more output types. The results will be stacked into bands, in order of appearance in the list. For example using "all" will create a 6-band raster with all outputs. Using "mean" will create a single band raster populated with mean cell heights. Using "count" will create a proxy for point density, a single band raster populated with cell counts. See the PDAL writers.gdal documentation for more: <a href="https://www.pdal.io/stages/writers.gdal.html">https://www.pdal.io/stages/writers.gdal.html</a>
+            </td>
+            <td>text string</td>
+          </tr>
+        </tbody>
+      </table>
+      <table class="table table-bordered table-hover table-sm">
+        <thead>
+          <tr>
+            <th>Response type</th>
+            <th>Expected response</th>
+          </tr>
+        </thead>
+        <tbody>
+            <td>Synchronous. In most cases a result will be returned inside Apache's timeout limit.</td>
+            <td>A rasterised DTM from the selected tile. Optionally an XML response document providing a process description and a link to the raster product. Raster results need to be piped to a file, otherwise the response will be a bunch of binary data to the terminal. Try something like:
+            <p>
+            <code>curl -H "Content-Type: text/xml" -d@tile2dtm.xml -X POST http://your.pointcloud.domain/wps -o result.tiff</code></p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+
+<p>
+Contact: Dr Adam Steer, adam.steer -at- anu.edu.au<br />
+Hosted at NCI - Australia's National Computational Infrastructure: <a href="http://nci.org.au">http://nci.org.au</a>
+</p>
+
+</div>
+<!-- /container -->
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+</body>
+</html>

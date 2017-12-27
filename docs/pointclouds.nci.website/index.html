@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Point cloud research at NCI</title>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+<link href="css/custom.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="page-header">
+<img src="images/nci_logo_small.png" width="120px" align="left" padding="10px">
+<div class="container" style="margin-left: 10%;">
+<h1 class="pagetitle">Point cloud research at NCI</h1>
+</div>
+</div>
+
+<div class="container"style="margin-top: 2%;">
+
+<h3>pointWPS</h3>
+<p>
+A data service testbed for massive point datasets - using server-side compute to deliver on-demand data subsets and derived products.</p>
+<p>
+Check available services at the <a href="/wps?&service=wps&version=1.0.0&request=getcapabilities">the pointwps endpoint</a>; or read the documentation here: <a href="./pointwps.howto.html">how to use the pointwps service</a></p>
+<p class="bg-warning" style="padding: 5px; border: 0.5px solid #333333;">
+Caution - this is a development service and may be broken at any time. Initial public test release is scheduled for mid-August 2017. Due to storage hardware updates, underlying data may also be somewhat mobile until that time.</p>
+
+<h3>Point data visualisation</h3>
+<ul>
+<li><a href="./mh370/">Mh370 phase 1</a><br />
+    A massive bathymetric survey rendered using <a href="http://potree.org">Potree</a>. See the background story on the search for MH370 at Geoscience Australia's <a href="https://geoscience-au.maps.arcgis.com/apps/Cascade/index.html?appid=038a72439bfa4d28b3dde81cc6ff3214">story map</a>. Links for data download can be found here: <a href="http://marine.projects.ga.gov.au/mh370-phase-one-data-release.html">http://marine.projects.ga.gov.au/mh370-phase-one-data-release.html</a></li>
+<li><a href="./entwine3dt/?resource=act_8pt_rgb/">Canberra in 3D tiles</a><br />
+    This is a 3D point cloud exploration tool using Cesium 3D tiles built by <a href="http://entwine.io">entwine</a>. There are 4.7 billion points in this dataset, which load depending on your viewpoint. Please explore, choose different basemaps, and enjoy! Unfortunately this version is static - we can't turn point classes on or off, or use different basemap data to colour them. It's an initial foray into data exploration tools.</li>
+</ul>
+<p class="bg-warning" style="padding: 5px; border: 0.5px solid #333333;">
+Caution - these are exploratory visualisations and may  be broken at any time.</p>
+
+<h3>Related work / publications</h3>
+<ul>
+<li>EGU 2017 poster [<a href="https://nci.org.au/wp-content/uploads/2017/03/adamsteer_egu17_final_small.pdf">download PDF</a>]<br />
+    Descripton of a WPS based point cloud data service, with some inital results.
+</ul>
+
+<p>
+Contact: Dr Adam Steer, adam.steer -at- anu.edu.au<br />
+Hosted at NCI - Australia's National Computational Infrastructure: <a href="http://nci.org.au">http://nci.org.au</a>
+</p>
+
+</div>
+<!-- /container -->
+
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

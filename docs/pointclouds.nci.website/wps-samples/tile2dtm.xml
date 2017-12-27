@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<wps:Execute service="WPS" version="1.0.0" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsExecute_request.xsd">
+
+<ows:Identifier>tile2dtm</ows:Identifier>
+  <wps:DataInputs>
+  
+    <wps:Input>
+      <ows:Identifier>dataset</ows:Identifier>
+      <wps:Data>
+          <wps:LiteralData dataType="xs:string">/g/data1/rr1/Elevation/Merimbula0313/z55/2013/Mass_Points/LAS/AHD/LAS/Tiles_2k_2k/Merimbula2013-C3-AHD_7605914_55_0002_0002.las</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+    <wps:Input>
+      <ows:Identifier>resolution</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:integer">2</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+    <wps:Input>
+      <ows:Identifier>radius</ows:Identifier>
+      <wps:Data>
+        <wps:LiteralData dataType="xs:float">3.5</wps:LiteralData>
+      </wps:Data>
+    </wps:Input>
+    
+  </wps:DataInputs>
+
+<wps:ResponseForm>
+
+    <wps:RawDataOutput mimeType="image/tiff">
+      <ows:Identifier>DTM</ows:Identifier>
+    </wps:RawDataOutput>
+
+</wps:ResponseForm>
+</wps:Execute>
