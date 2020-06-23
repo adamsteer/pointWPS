@@ -34,20 +34,18 @@ The aim of this project is to provide solutions to as many of these complaints a
 
 Importantly, this was one attempt at using data as it is stored, and in an open, well-described and extensible way.
 
-## Platforms
+## requirements
 
-Key technologies for the current development state:
+The current development state needs:
 
 - pyWPS (pyWPS v4.0): a python implementation for the OGC WPS service, describing client/server transactions. Chosen because there is a standard and well described way to write WPS processes in Python
-- PDAL (v 1.5): the Point Data Abstraction Library, basically GDAL for points - translation, manipulation. Chosen because of it's multiple format read/write capacity, plus integration into C code later
+- PDAL: the Point Data Abstraction Library, basically GDAL for points - translation, manipulation. Chosen because of it's multiple format read/write capacity, plus integration into C code later
 - GDAL: underpins PDAL
 - postgres-pointcloud: point data handling for postGIS, also an export format for PDAL
 - netCDF/HDF
 - WSGI: the Apache python interpreter
 - GNU parallel
 
-No JVM required.
-
 ## Documentation
 
-See [installation documentation](./docs/installation.md); and what the pointWPS system expects from [a metadata attribute service](./docs/metadata_attributes.md).
+See [installation documentation](./docs/install.md); and what the pointWPS system expects from [a metadata attribute service](./docs/MASattributes.md).
