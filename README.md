@@ -50,4 +50,4 @@ No JVM required.
 
 ## Documentation
 
-See [installation documentation] (./docs/installation.md); and what the pointWPS system expects from [a metadata attribute service] (./docs/metadata_attributes.md).
+See [installation documentation](./docs/installation.md); and what the pointWPS system expects from [a metadata attribute service](./docs/metadata_attributes.md).
