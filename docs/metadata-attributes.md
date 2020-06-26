@@ -4,7 +4,7 @@ We expect pontWPS to obtain dataset boundaries and metadata from a data store - 
 
 So - what do we expect the data store to ingest? And where does the metadata come from?
 
-Here is a 'first cut' sample JSON record that we might find useful:
+Here is a 'first cut' sample JSON record that we might find useful.
 
 ```
 {
@@ -64,7 +64,7 @@ which can be compounded into:
 pdal info --metadata --boundary --schema --filters.stats.dimensions=Classification --filters.stats.count="Classification" /path/to/file
 ```
 
-As far as I can see the hardest thing to extract will be the survey name - since naming rules might not be consistent. For data in /g/data/rr1, and /d/data//ub8 a regular expression like:
+As far as I can see the hardest thing to extract will be the survey name - since naming rules might not be consistent. For data in /g/data/rr1, and /d/data/ub8 a regular expression like:
 ```
 ^[a-zA-Z0-9].*_
 ```
