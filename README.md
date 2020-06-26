@@ -2,6 +2,8 @@
 
 Is a set of WPS processes for delivering data and derived products from dense, ungridded point clouds. It was developed to technology demonstration (current state) for the National Computational Infrastructure.
 
+Here is a talk about the system, from FOSS4G 2017: https://goo.gl/WU7Pwc
+
 ## Current status
 
 It is currently a set of hopefully-useful tools for reference. While the WPS parts may be useful, it would be unwise to deploy this system in it's current state into production. The system was described at EGU 2017, and FOSS4G (Boston) 2017, at which point a working demonstration was made available. The technology demonstration was decommissioned in around October 2017.
@@ -48,4 +50,4 @@ The current development state needs:
 
 ## Documentation
 
-See [installation documentation](./docs/install.md); and what the pointWPS system expects from [a metadata attribute service](./docs/MASattributes.md).
+See [installation documentation](./docs/install.md); and what the pointWPS system expects from [a metadata attribute service](./docs/metadata-attributes.md).
