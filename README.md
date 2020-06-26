@@ -50,4 +50,4 @@ The current development state needs:
 
 ## Documentation
 
-See [installation documentation](./docs/install.md); and what the pointWPS system expects from [a metadata attribute service](./docs/MASattributes.md).
+See [installation documentation](./docs/install.md); and what the pointWPS system expects from [a metadata attribute service](./docs/metadata-attributes.md).
