@@ -1,16 +1,16 @@
 # Metadata attribute record for pointWPS
 
-We expect pontWPS to obtain dataset boundaries and metadata from a data store - it is much faster than querying the raw data!
+We expect pointWPS to obtain dataset boundaries and metadata from a data store - it is much faster than querying the raw data.
 
 So - what do we expect the data store to ingest? And where does the metadata come from?
 
-Here is a 'first cut' sample JSON record that we might find useful.
+Here is a 'first cut' sample JSON record that we might find useful. This should eventually align closely with the [STAC specfication](https://stacspec.org), since we want metadata records for points to work pretty much the same as metadata records for rasters or anything else.
 
 ```
 {
     "surveyname": "some_survey_id",
     "filename": "/full/path/to/file",
-    "datatype" "[ las | laz | netCDF | pgsql]",
+    "datatype" "[ las | laz | netCDF | pgsql | EPT ]",
     "count": "123456789",
     "area": "349875",
     "mean_density": "10.34",
@@ -27,13 +27,13 @@ Here is a 'first cut' sample JSON record that we might find useful.
                 "boundary": "POLYGON or MULTIPOLYGON ((WKT))"
                 },
             },
-    "srs": "OGC SRS WKT",
+    "horizontal_srs": "horizontal SRS EPSG code | proj string",
     "heightreference": "WGS84 | ITRF08 | AHD94 | GRS80", <-- ellipsoidal or orthometric height - and which one?
     "units": {
         "vertical": "m",
         "horizontal": "m"
         },
-    "ASPRSclass" : { <-- if ASPRS classification data are present, show them here. If not, assign all points to '0'
+    "ASPRSclasses" : { <-- if ASPRS classification data are present, show them here. If not, assign all points to '0'
         "0": 0,
         "1": 2345,
         "2": 9879,
@@ -43,14 +43,14 @@ Here is a 'first cut' sample JSON record that we might find useful.
         "18": 9875,
         "xx": yyy
     },
-    "scale_x": 0.001, <-- these might be '1' for data stored as float
+    "scale_x": 0.001, <-- these might be '1' for data stored as floats
     "scale_y": 0.001,
     "scale_z": 0.001,
     "software_id": "LP360 from QCoherent Software  ",
     }
 ```
 
-These data can be obtained with the following queries from PDAL:
+These data can be obtained with the following queries from PDAL for LAS tiles:
 
 ```
 pdal info --metadata /path/to/file
@@ -58,25 +58,31 @@ pdal info --boundary /path/to/file
 pdal info --schema /path/to/file
 pdal info --filters.stats.dimensions=Classification --filters.stats.count="Classification" /path/to/file
 ```
+For Entwine Point Tile datasets, we can ingest a lot from the dataset `ept.json` at the root level. For a bounding polygon, we need to run a pipeline like:
 
-which can be compounded into:
 ```
-pdal info --metadata --boundary --schema --filters.stats.dimensions=Classification --filters.stats.count="Classification" /path/to/file
+[
+    {
+        "type": "readers.ept",
+        "filename": "https://act-2015-rgb.s3.amazonaws.com",
+        "resolution": 10
+    },
+    {
+        "type" : "filters.reprojection",
+        "out_srs":"EPSG:4326"
+    },
+    {
+        "type": "filters.hexbin",
+        "threshold": 5,
+        "edge_length": 10
+    }
+]
 ```
-
-As far as I can see the hardest thing to extract will be the survey name - since naming rules might not be consistent. For data in /g/data/rr1, and /d/data/ub8 a regular expression like:
-```
-^[a-zA-Z0-9].*_
-```
-...on the file name should be OK.
-
-This query set takes ~1 minute per tile - for LAS data it is reading though the file itself, not just hitting a metadata entry. This, however, should be a one-time cost. Moving data should require only path updating.
+...and dump the output to a JSON file to get a multipolygon for the entire dataset.
 
 ## What do we want from a metadata store?
 
 With all this data, what do we want to do?
-
-It doesn't make sense to query metadata directly from LAS tiles. If we made them all into netCDFs, maybe an ncdump would do the trick - but with other costs (like how do we organise data?). Even if we used netCDF stores, it seems more efficient to query a metadata store in an optimised PostGIS database for things like:
 
 - tell me what data exist in my region of interest
 - tell me if my data have ground and tree classifications
@@ -96,5 +102,3 @@ This first-stage filter restricts the size of datasets that underlying processes
 ## Issues we have found using a metadata store
 
 SRS metadata are often incorrect or incomplete - which creates difficulty for downstream processing.
-
-Using a similar data crawling scheme, a programmatic QA tool will be developed to catch errant metadata before datasets are published.
